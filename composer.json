@@ -1,0 +1,17 @@
+{
+    "name": "c.ehlers/cewp",
+    "description": "Christoph Ehlers Wordpress-Plugin",
+    "authors": [
+        {
+            "name": "Christoph Ehlers",
+            "email": "Christoph.Ehlers1988@gmx.de"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "CEWP\\": "src",
+            "CEWP\\Modules\\": "modules"
+        }
+    }
+}

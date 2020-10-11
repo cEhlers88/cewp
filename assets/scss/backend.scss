@@ -1,0 +1,26 @@
+tr {
+  &.status-draft {
+    background-color: #f2edd6;
+    font-style: italic;
+  }
+
+  &.status-publish {
+    background-color:#d5f2d5;
+  }
+}
+tbody>:nth-child(2n+1), ul.striped > :nth-child(2n+1) {
+  &.status-draft {
+    background-color: #ece5cb;
+    font-style: italic;
+  }
+
+  &.status-publish {
+    background-color: #bfeabf;
+  }
+}
+.row-actions {
+  span {
+    font-size:11px;
+    background:red;
+  }
+}
