@@ -7,9 +7,7 @@
 [![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/CMB2/CMB2.svg)](https://scrutinizer-ci.com/g/CMB2/CMB2/?branch=develop)
 [![Project Stats](https://www.openhub.net/p/CMB2/widgets/project_thin_badge.gif)](https://www.openhub.net/p/CMB2)
 
-![CMB2](https://plugins.trac.wordpress.org/export/HEAD/cmb2/assets/banner-1544x500.png)
-
-**Contributors:**      [Christoph Ehlers](https://github.com/cehlers88)  
+**Contributor:**      [Christoph Ehlers](https://github.com/cehlers88)  
 **Homepage:**          [https://github.com/cehlers88](https://github.com/cehlers88)  
 **Tags:**              wordpress  
 **Requires at least:** 5.5.1  

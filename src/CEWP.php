@@ -2,20 +2,47 @@
 
 namespace CEWP;
 
+use CEWP\core\AdminSiteRules;
 use Exception;
 
 class CEWP
 {
     public const DEFAULT_NAMESPACE = "CEWP\Modules";
+
     /**
      * @var ModuleInterface[] $modules
      */
-
     private array $modules = [];
 
-    public function __construct()
+    private string $distFolder;
+
+    private array $assets;
+
+    private AdminSiteRules $adminSiteRules;
+
+    public function AdminSiteRules(): AdminSiteRules {
+        return $this->adminSiteRules;
+    }
+
+    public function getDistFolder(): string
     {
+        return $this->distFolder;
+    }
+
+    public function setDistFolder(string $distFolder): CEWP {
+        $this->distFolder = $distFolder;
+        return $this;
+    }
+
+    public function __construct() {
+        $this->adminSiteRules = new AdminSiteRules();
+
         add_action('init',[$this,'registerCustomPostTypes']);
+
+        $this->assets = [
+            'backend' => ['scripts'=>[],'styles'=>[]],
+            'frontend' => ['scripts'=>[],'styles'=>[]]
+        ];
     }
 
     public function addModule(ModuleInterface $module):CEWP {
@@ -29,17 +56,33 @@ class CEWP
         flush_rewrite_rules();
     }
 
+    public function createFilters(){
+        $this->AdminSiteRules()->execute();
+    }
+
     public function deactivate(){
         flush_rewrite_rules();
     }
 
-    public function enqueueAdmin(){
-        wp_enqueue_script('cewp_backend',plugins_url('/../dist/js/backend.js',__FILE__));
-        wp_enqueue_style('cewp_backend',plugins_url('/../dist/css/backend.css',__FILE__));
-
+    public function enqueueAdminScripts(){
+        foreach ($this->assets['backend']['scripts'] as $file){
+            wp_enqueue_script('cewp_backend',plugins_url('..'.$file,__FILE__),'',true);
+        }
     }
 
-    public function loadPlugins(string $modulesDirectory, string $namespace = ''){
+    public function enqueueAdminStyles(){
+        foreach ($this->assets['backend']['styles'] as $file){
+            wp_enqueue_style('cewp_backend',plugins_url('..'.$file,__FILE__),'',true);
+        }
+    }
+
+    public function enqueueScripts(){
+        foreach ($this->assets['frontend']['scripts'] as $file){
+            wp_enqueue_script('cewp_frontend',plugins_url('..'.$file,__FILE__),'',true);
+        }
+    }
+
+    public function loadPlugins(string $modulesDirectory, string $namespace = ''):CEWP {
         if($namespace===''){
             $namespace = self::DEFAULT_NAMESPACE;
         }
@@ -52,15 +95,46 @@ class CEWP
                     }
                     $instance = new $classname();
                     if($instance instanceof ModuleInterface){
+                        $this->registerModulesAssets($subDirectory);
+
+                        $instance->init($this);
+
+                        add_action('cmb2_admin_init', function () use ($instance){
+                            $instance->createCmb2Boxes();
+                        });
+
                         $this->modules[] = $instance;
                     }
                 }catch(Exception $exception){}
             }
         }
+
+        if(count($this->assets['backend']['scripts'])>0){
+            add_action('admin_enqueue_scripts',[$this,'enqueueAdminScripts']);
+        }
+
+        if(count($this->assets['frontend']['scripts'])>0){
+            add_action('wp_enqueue_scripts',[$this,'enqueueScripts']);
+        }
+
+        if(count($this->assets['backend']['styles'])>0){
+            add_action('admin_enqueue_scripts',[$this,'enqueueAdminStyles']);
+        }
+
+        return $this;
     }
 
-    public function registerAdminScripts(){
-        add_action('admin_enqueue_scripts',[$this,'enqueueAdmin']);
+    private function registerModulesAssets($moduleName){
+        foreach (['js','css'] as $type){
+            foreach (['backend','frontend'] as $enviroment){
+                $path = $this->distFolder.'/'.$type.'/'.$moduleName.'/'.$enviroment.'.'.$type;
+                if(file_exists(__DIR__.'/..'.$path)){
+                    $this->assets[$enviroment][$type === 'js' ? 'scripts' : 'styles'][] = $path;
+                }else{
+                    $notFound = true;
+                }
+            }
+        }
     }
 
     public function registerCustomPostTypes(){

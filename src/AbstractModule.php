@@ -2,28 +2,24 @@
 
 namespace CEWP;
 
-class AbstractModule implements ModuleInterface
+use CMB2;
+
+abstract class AbstractModule implements ModuleInterface
 {
     /**
      * @var PostType[]
      */
     private array $postTypes = [];
 
-    private array $scriptsBackend = [];
-
-    private array $scriptsFrontend = [];
-
-    private array $stylesBackend = [];
-
-    private array $stylesFrontend = [];
-
-    public function addBackendScript(string $scriptPath):AbstractModule {
-        $this->scriptsBackend[] = $scriptPath;
-        return $this;
-    }
+    private array $cmb2Boxes = [];
 
     public function addPostType(PostType $postType):AbstractModule {
         $this->postTypes[] = $postType;
+        return $this;
+    }
+
+    public function addCmb2Box(array $CMB2): ModuleInterface {
+        $this->cmb2Boxes[] = $CMB2;
         return $this;
     }
 
@@ -31,18 +27,13 @@ class AbstractModule implements ModuleInterface
         return $this->postTypes;
     }
 
-    public function addFrontendScript(string $scriptPath): ModuleInterface {
-        $this->scriptsFrontend[] = $scriptPath;
-        return $this;
+    public function createCmb2Boxes(): array {
+        return array_map(function($args){
+            return new_cmb2_box($args);
+        },$this->cmb2Boxes);
     }
 
-    public function addBackendStyle(string $stylePath): ModuleInterface {
-        $this->stylesBackend[] = $stylePath;
-        return $this;
-    }
-
-    public function addFrontendStyle(string $stylePath): ModuleInterface {
-        $this->stylesFrontend[] = $stylePath;
+    public function init(CEWP $CEWP): ModuleInterface {
         return $this;
     }
 }

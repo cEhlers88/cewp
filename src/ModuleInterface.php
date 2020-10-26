@@ -2,18 +2,21 @@
 
 namespace CEWP;
 
+use CMB2;
+
 interface ModuleInterface
 {
-    public function addBackendScript(string $scriptPath):ModuleInterface;
-
-    public function addFrontendScript(string $scriptPath):ModuleInterface;
-
-    public function addBackendStyle(string $stylePath):ModuleInterface;
-
-    public function addFrontendStyle(string $stylePath):ModuleInterface;
-
     /**
      * @return PostType[]
      */
     public function getPostTypes():array;
+
+    public function addCmb2Box(array $CMB2): ModuleInterface;
+
+    /**
+     * @return CMB2[]
+     */
+    public function createCmb2Boxes():array;
+
+    public function init(CEWP $CEWP):ModuleInterface;
 }

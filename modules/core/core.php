@@ -2,7 +2,9 @@
 
 namespace CEWP\Modules\core;
 
-class core
+use CEWP\AbstractModule;
+
+class core extends AbstractModule
 {
 
 }
