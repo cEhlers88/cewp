@@ -1,0 +1,29 @@
+tr {
+  &.status-draft {
+    background-color: #f2e1d7;
+    font-style: italic;
+  }
+
+  &.status-publish {
+    background-color:#d5f2d5;
+  }
+}
+tbody>:nth-child(2n+1), ul.striped > :nth-child(2n+1) {
+  &.status-draft {
+    background-color: #f4d8c6;;
+    font-style: italic;
+  }
+
+  &.status-publish {
+    background-color: #bfeabf;
+  }
+}
+.row-actions {
+  span {
+    font-size:11px;
+  }
+}
+
+.cmb-row {
+  padding:5px !important;
+}
