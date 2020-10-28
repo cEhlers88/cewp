@@ -10,8 +10,8 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "CEWP\\": "lib",
-            "CEWP\\App\\": "src"
+            "CEWP\\": "src",
+            "CEWP\\Modules\\": "modules"
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace CEWP\Admin;
+namespace CEWP\core;
 
 class AdminSiteRules {
     private $rulesColumnsAdd = [];
