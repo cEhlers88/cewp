@@ -1,6 +1,6 @@
 <?php
 
-namespace CEWP;
+namespace CEWP\Core;
 
 use CMB2;
 
